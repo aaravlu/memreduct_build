@@ -8,20 +8,19 @@ jobs:
   build:
     runs-on: windows-2022
     steps:
-      - name: Checkout target
+      - name: Checkout memreduct
         uses: actions/checkout@v6
         with:
           repository: henrypp/memreduct
           ref: refs/tags/v.3.5.2
           path: memreduct
 
-      - name: Fetch deps
-        working-directory: memreduct
-        shell: bash
-        run: |
-          git submodule update --init --recursive
-          mv ../routine .
-          mv ../builder .
+      - name: Checkout routine
+        uses: actions/checkout@v6
+        with:
+          repository: henrypp/routine
+          ref: refs/tags/v.2.7.11
+          path: routine
 
       - name: Restore dependency packages
         working-directory: memreduct
