@@ -16,10 +16,12 @@ jobs:
           path: memreduct
 
       - name: Fetch deps
+        working-directory: memreduct
         run: |
           git submodule update --init --recursive
 
       - name: Restore dependency packages
+        working-directory: memreduct
         run: |
           nuget restore
 
@@ -46,5 +48,5 @@ jobs:
         with:
           name: memreduct
           path: |
-            x64/Release/*.dll
-            x64/Release/*.exe
+            memreduct/x64/Release/*.dll
+            memreduct/x64/Release/*.exe
