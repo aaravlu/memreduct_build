@@ -8,33 +8,22 @@ jobs:
   build:
     runs-on: windows-2022
     steps:
-      - name: Checkout memreduct
-        uses: actions/checkout@v4
+      - name: Checkout target
+        uses: actions/checkout@v6
         with:
           repository: henrypp/memreduct
-          ref: refs/tags/v.3.4
+          ref: refs/tags/v.3.5.2
           path: memreduct
 
-      - name: Checkout routine
-        uses: actions/checkout@v4
-        with:
-          repository: henrypp/routine
-          ref: refs/tags/v.2.6.3
-          path: routine
-
-      - name: Checkout builder
-        uses: actions/checkout@v4
-        with:
-          repository: henrypp/builder
-          ref: refs/tags/v.2.0.10
-          path: builder
-
-      - name: Check
+      - name: Fetch deps
         run: |
-          ls -al routine
-          ls -al builder
+          git submodule update --init --recursive
 
-      - name: Setup MSVC
+      - name: Restore dependency packages
+        run: |
+          nuget restore
+
+      - name: Setup msvc
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
@@ -43,17 +32,19 @@ jobs:
 
       - name: Build
         working-directory: memreduct
-        run: |
-          msbuild memreduct.sln `
+        run: msbuild memreduct.sln
+          /p:PlatformToolset=v142 `
+          /p:WindowsTargetPlatformVersion=10.0.19041.0 `
           /p:Platform=x64 `
           /p:Configuration=Release `
           /p:WholeProgramOptimization=true `
-          /p:FunctionLevelLinking=true `
-          /p:EnableEnhancedInstructionSet=AdvancedVectorExtensions2
+          /p:Optimization=MinSpace `
+          /p:FunctionLevelLinking=true
 
       - name: Archive Binary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: memreduct
           path: |
-            memreduct/x64/Release/*.exe
+            x64/Release/*.dll
+            x64/Release/*.exe
