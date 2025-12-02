@@ -25,23 +25,25 @@ jobs:
         run: |
           nuget restore
 
-      - name: Setup msvc
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
-          toolset: 14.29
-          sdk: 10.0.19041.0
+      # - name: Setup msvc
+      #   uses: ilammy/msvc-dev-cmd@v1
+      #   with:
+      #     arch: x64
+      #     toolset: 14.29
+      #     sdk: 10.0.19041.0
 
       - name: Build
         working-directory: memreduct
-        run: msbuild memreduct.sln
-          /p:PlatformToolset=v142 `
+        run:
+          msbuild memreduct.sln
           /p:WindowsTargetPlatformVersion=10.0.19041.0 `
           /p:Platform=x64 `
           /p:Configuration=Release `
           /p:WholeProgramOptimization=true `
           /p:Optimization=MinSpace `
           /p:FunctionLevelLinking=true
+
+          # /p:PlatformToolset=v142 `
 
       - name: Archive Binary
         uses: actions/upload-artifact@v5
