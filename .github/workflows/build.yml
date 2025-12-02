@@ -13,15 +13,18 @@ jobs:
         with:
           repository: henrypp/memreduct
           ref: refs/tags/v.3.5.2
-          path: memreduct/memreduct
+          path: memreduct
 
       - name: Fetch deps
-        working-directory: memreduct/memreduct
+        working-directory: memreduct
+        shell: bash
         run: |
           git submodule update --init --recursive
+          mv ../routine .
+          mv ../builder .
 
       - name: Restore dependency packages
-        working-directory: memreduct/memreduct
+        working-directory: memreduct
         run: |
           nuget restore
 
@@ -33,10 +36,10 @@ jobs:
         with:
           arch: x64
           sdk: 10.0.19041.0
-          toolset: 14.29
+          # toolset: 14.29
 
       - name: Build
-        working-directory: memreduct/memreduct
+        working-directory: memreduct
         run: |
           msbuild memreduct.sln `
           /p:Platform=x64 `
@@ -51,7 +54,7 @@ jobs:
         with:
           name: memreduct
           path: |
-            memreduct/memreduct/x64/Release/*.dll
-            memreduct/memreduct/x64/Release/*.exe
+            memreduct/x64/Release/*.dll
+            memreduct/x64/Release/*.exe
 
 # /p:PlatformToolset=v142 `
