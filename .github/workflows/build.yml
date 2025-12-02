@@ -30,12 +30,12 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Setup msvc
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
-          sdk: 10.0.19041.0
-          # toolset: 14.29
+      # - name: Setup msvc
+      #   uses: ilammy/msvc-dev-cmd@v1
+      #   with:
+      #     arch: x64
+      #     sdk: 10.0.19041.0
+      #     toolset: 14.29
 
       - name: Build
         working-directory: memreduct
@@ -45,7 +45,6 @@ jobs:
           /p:Configuration=Release `
           /p:WholeProgramOptimization=true `
           /p:Optimization=MinSpace `
-          /p:WindowsTargetPlatformVersion=10.0.19041.0 `
           /p:FunctionLevelLinking=true
 
       - name: Archive Binary
@@ -56,4 +55,5 @@ jobs:
             memreduct/x64/Release/*.dll
             memreduct/x64/Release/*.exe
 
+# /p:WindowsTargetPlatformVersion=10.0.19041.0 `
 # /p:PlatformToolset=v142 `
