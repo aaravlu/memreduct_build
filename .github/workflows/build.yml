@@ -13,36 +13,38 @@ jobs:
         with:
           repository: henrypp/memreduct
           ref: refs/tags/v.3.5.2
-          path: memreduct
+          path: memreduct/memreduct
 
       - name: Fetch deps
-        working-directory: memreduct
+        working-directory: memreduct/memreduct
         run: |
           git submodule update --init --recursive
 
       - name: Restore dependency packages
-        working-directory: memreduct
+        working-directory: memreduct/memreduct
         run: |
           nuget restore
+
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v2
 
       - name: Setup msvc
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
           sdk: 10.0.19041.0
-          # toolset: 14.29
-
-      - name: Setup msbuild
-        uses: microsoft/setup-msbuild@v2
+          toolset: 14.29
 
       - name: Build
-        working-directory: memreduct
+        working-directory: memreduct/memreduct
         run: |
           msbuild memreduct.sln `
           /p:Platform=x64 `
           /p:Configuration=Release `
           /p:WholeProgramOptimization=true `
           /p:Optimization=MinSpace `
+          /p:WindowsTargetPlatformVersion=10.0.19041.0 `
+          /p:PlatformToolset=v142 `
           /p:FunctionLevelLinking=true
 
       - name: Archive Binary
@@ -50,8 +52,5 @@ jobs:
         with:
           name: memreduct
           path: |
-            memreduct/x64/Release/*.dll
-            memreduct/x64/Release/*.exe
-
-# /p:WindowsTargetPlatformVersion=10.0.19041.0
-# /p:PlatformToolset=v142 `
+            memreduct/memreduct/x64/Release/*.dll
+            memreduct/memreduct/x64/Release/*.exe
