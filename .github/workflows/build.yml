@@ -34,7 +34,8 @@ jobs:
 
       - name: Build
         working-directory: memreduct
-        run: msbuild memreduct.sln
+        run: |
+          msbuild memreduct.sln `
           /p:WindowsTargetPlatformVersion=10.0.19041.0 `
           /p:Platform=x64 `
           /p:Configuration=Release `
